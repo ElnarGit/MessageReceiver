@@ -28,8 +28,15 @@ public class MessageController {
 	}
 	
 	@GetMapping("/sender/{sender}")
-	public List<Message> getMessageBySender(@PathVariable String sender){
-		return messageService.getMessageBySender(sender);
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<List<Message>> getMessageBySender(@PathVariable String sender){
+		List<Message> messages = messageService.getMessageBySender(sender);
+		
+		if(messages.isEmpty()){
+			messages = messageService.getLast10Messages();
+		}
+		
+		return ResponseEntity.ok(messages);
 	}
 	
 	@GetMapping("last10")
